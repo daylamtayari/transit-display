@@ -95,9 +95,10 @@ def get_nearby_ebikes():
     return int(nearby_count)
 
 
-def get_winthrop_lawrence_status():
+def get_specific_station_status():
     """
     Returns an array containing the amount of regular bikes followed by ebikes
+    for the given Divvy station ID
     """
     station_status = get_station_status(secrets.get("DIVVY_STATION_ID"))
     return parse_station_vehicles(station_status['vehicle_types_available'])
