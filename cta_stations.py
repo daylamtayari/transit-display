@@ -1,6 +1,9 @@
 # Dictionary containing every station in a given line and their order going north and south
 # Only red, orange, green, and blue lines were completed as this was performed manually and
 # those were the only lines of interest. Feel free to update for additional lines.
+#
+# This is only needed if you want the train tracker on the sides
+#
 # Order starts at 0
 
 stations = {
