@@ -3,10 +3,12 @@ import time
 import threading
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
+from dotenv import dotenv_values
 from icons import icons
 from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
-from colours import RED_LINE_COLOUR, PURPLE_LINE_COLOUR, ORANGE_LINE_COLOUR, BLUE_LINE_COLOUR, GREEN_LINE_COLOUR, DIVVY_COLOUR, BUS_COLOUR, TEXT_COLOUR
+from colours import RED_LINE_COLOUR, PURPLE_LINE_COLOUR, ORANGE_LINE_COLOUR, BLUE_LINE_COLOUR, GREEN_LINE_COLOUR, DIVVY_COLOUR, BUS_COLOUR, TEXT_COLOUR, get_colour
 
+secrets = dotenv_values(".env")
 logger = logging.getLogger(__name__)
 
 
@@ -41,6 +43,10 @@ class TransitDisplay:
         # Store API data
         self.api_data = {}
         self.api_lock = threading.Lock()
+
+        # Get configurable train colours from .env
+        self.train_1_colour = get_colour(secrets.get("TRAIN_1_COLOUR"))
+        self.train_2_colour = get_colour(secrets.get("TRAIN_2_COLOUR"))
 
     def draw_icon(self, icon_name, x, y, color):
         if icon_name not in self.icons:
@@ -151,35 +157,35 @@ class TransitDisplay:
         with self.api_lock:
             data = self.api_data.copy()
 
-        # Red Line Row
+        # Train 1 Row
         # Draw train 1 south ETA
         train_1_south_data = data.get('train_1_south', [])
         if not self.draw_question_mark_if_unknown(train_1_south_data, 25, 8):
             minutes = minutes_until_eta(train_1_south_data)
             graphics.DrawText(self.canvas, self.font, 25, 15,
-                              RED_LINE_COLOUR, str(minutes))
+                              self.train_1_colour, str(minutes))
 
         # Draw train 1 north ETA
         train_1_north_data = data.get('train_1_north', [])
         if not self.draw_question_mark_if_unknown(train_1_north_data, 46, 8):
             minutes = minutes_until_eta(train_1_north_data)
             graphics.DrawText(self.canvas, self.font, 46, 15,
-                              RED_LINE_COLOUR, str(minutes))
+                              self.train_1_colour, str(minutes))
 
-        # Purple Line Row
+        # Train 2 Row
         # Draw train 2 south ETA
         train_2_south_data = data.get('train_2_south', [])
         if not self.draw_question_mark_if_unknown(train_2_south_data, 25, 19):
             minutes = minutes_until_eta(train_2_south_data)
             graphics.DrawText(self.canvas, self.font, 25, 26,
-                              PURPLE_LINE_COLOUR, str(minutes))
+                              self.train_2_colour, str(minutes))
 
         # Draw train 2 north ETA
         train_2_north_data = data.get('train_2_north', [])
         if not self.draw_question_mark_if_unknown(train_2_north_data, 46, 19):
             minutes = minutes_until_eta(train_2_north_data)
             graphics.DrawText(self.canvas, self.font, 46, 26,
-                              PURPLE_LINE_COLOUR, str(minutes))
+                              self.train_2_colour, str(minutes))
 
         # Bus Row
         # Draw bus west ETA
@@ -285,15 +291,15 @@ class TransitDisplay:
         self.canvas.Clear()
 
         # Draw transit icons with proper positioning
-        # Red Line Row
-        self.draw_icon('train', 7, 7, RED_LINE_COLOUR)
-        self.draw_icon('down_arrow', 18, 9, RED_LINE_COLOUR)
-        self.draw_icon('up_arrow', 39, 9, RED_LINE_COLOUR)
+        # Train 1 Row
+        self.draw_icon('train', 7, 7, self.train_1_colour)
+        self.draw_icon('down_arrow', 18, 9, self.train_1_colour)
+        self.draw_icon('up_arrow', 39, 9, self.train_1_colour)
 
-        # Purple Line Row
-        self.draw_icon('train', 7, 18, PURPLE_LINE_COLOUR)
-        self.draw_icon('down_arrow', 18, 20, PURPLE_LINE_COLOUR)
-        self.draw_icon('up_arrow', 39, 20, PURPLE_LINE_COLOUR)
+        # Train 2 Row
+        self.draw_icon('train', 7, 18, self.train_2_colour)
+        self.draw_icon('down_arrow', 18, 20, self.train_2_colour)
+        self.draw_icon('up_arrow', 39, 20, self.train_2_colour)
 
         # Bus Row
         self.draw_icon('bus', 7, 30, BUS_COLOUR)

@@ -22,3 +22,13 @@ BUS_COLOUR = graphics.Color(int(secrets.get("BUS_COLOUR_RED")), int(secrets.get(
 
 # White colour for text
 TEXT_COLOUR = graphics.Color(255, 255, 255)
+
+
+# Helper function to get colour by variable name from .env
+def get_colour(colour_name):
+    """
+    Returns the colour object based on the variable name string.
+    Used to dynamically select colours from .env
+    Defaults to TEXT_COLOUR if not found
+    """
+    return globals().get(colour_name, TEXT_COLOUR)
