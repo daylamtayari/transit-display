@@ -22,7 +22,7 @@ class TransitDisplay:
         options.parallel = 1
         options.hardware_mapping = 'regular'
         options.gpio_slowdown = 4
-        options.brightness = 75
+        options.brightness = int(secrets.get("BRIGHTNESS"))
         options.disable_hardware_pulsing = 1
 
         self.matrix = RGBMatrix(options=options)
