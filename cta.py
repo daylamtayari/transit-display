@@ -32,7 +32,7 @@ def get_train_arrivals(stpid):
     and returns an array of the all of the arrivals ETAs in order
     """
     url = f"{TRAIN_ARRIVALS_ENDPOINT}?stpid={stpid}&max=3&key={
-        secrets.get("TRAIN_API_KEY")}&outputType=JSON"
+        secrets.get('TRAIN_API_KEY')}&outputType=JSON"
     response = requests.get(url)
     ctatt = response.json()['ctatt']
     if 'eta' not in ctatt:
@@ -45,7 +45,7 @@ def get_bus_arrivals(stpid):
     Calls the CTA bus API to get the arrivals for a given stop
     and returns an array of the all of the arrivals ETAs in order
     """
-    url = f"{BUS_PREDICTIONS_ENDPOINT}?key={secrets.get("BUS_API_KEY")}&stpid={
+    url = f"{BUS_PREDICTIONS_ENDPOINT}?key={secrets.get('BUS_API_KEY')}&stpid={
         stpid}&top=3&format=json"
     response = requests.get(url)
     eta = response.json()['bustime-response']['prd']
@@ -59,7 +59,7 @@ def get_train_routes(lines):
     Retrieves the location of all live trains on given routes
     """
     url = f"{TRAIN_LOCATIONS_ENDPOINT}?key={
-        secrets.get("TRAIN_API_KEY")}&outputType=JSON&rt={lines}"
+        secrets.get('TRAIN_API_KEY')}&outputType=JSON&rt={lines}"
     response = requests.get(url)
     return response.json()['ctatt']['route']
 

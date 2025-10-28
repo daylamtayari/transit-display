@@ -19,8 +19,8 @@ class TransitDisplay:
         options.chain_length = 1
         options.parallel = 1
         options.hardware_mapping = 'regular'
-        options.gpio_slowdown = 2
-        options.brightness = 100
+        options.gpio_slowdown = 4
+        options.brightness = 75
         options.disable_hardware_pulsing = 1
 
         self.matrix = RGBMatrix(options=options)
@@ -36,7 +36,7 @@ class TransitDisplay:
         self.icons = icons
 
         self.font = graphics.Font()
-        self.font.LoadFont("fonts/5x7.bdf")
+        self.font.LoadFont("fonts/5x8.bdf")
 
         # Store API data
         self.api_data = {}
@@ -133,9 +133,9 @@ class TransitDisplay:
         # Set default values for transit times if not fetched
         if not should_fetch_transit or results['time_to_love'] != 0 or results['time_to_office'] != 0:
             results['time_to_love'] = 4 + \
-                minutes_until_eta(results['train_1_south']) + 3
+                minutes_until_eta(results['train_1_south']) + 17 + 3
             results['time_to_office'] = 4 + \
-                minutes_until_eta(results['train_1_south']) + 6
+                minutes_until_eta(results['train_1_south']) + 23 + 6
 
         # Update shared data with lock
         with self.api_lock:
@@ -154,84 +154,84 @@ class TransitDisplay:
         # Red Line Row
         # Draw train 1 south ETA
         train_1_south_data = data.get('train_1_south', [])
-        if not self.draw_question_mark_if_unknown(train_1_south_data, 25, 7):
+        if not self.draw_question_mark_if_unknown(train_1_south_data, 25, 8):
             minutes = minutes_until_eta(train_1_south_data)
-            graphics.DrawText(self.canvas, self.font, 25, 7,
+            graphics.DrawText(self.canvas, self.font, 25, 15,
                               RED_LINE_COLOUR, str(minutes))
 
         # Draw train 1 north ETA
         train_1_north_data = data.get('train_1_north', [])
-        if not self.draw_question_mark_if_unknown(train_1_north_data, 46, 7):
+        if not self.draw_question_mark_if_unknown(train_1_north_data, 46, 8):
             minutes = minutes_until_eta(train_1_north_data)
-            graphics.DrawText(self.canvas, self.font, 46, 7,
+            graphics.DrawText(self.canvas, self.font, 46, 15,
                               RED_LINE_COLOUR, str(minutes))
 
         # Purple Line Row
         # Draw train 2 south ETA
         train_2_south_data = data.get('train_2_south', [])
-        if not self.draw_question_mark_if_unknown(train_2_south_data, 25, 18):
+        if not self.draw_question_mark_if_unknown(train_2_south_data, 25, 19):
             minutes = minutes_until_eta(train_2_south_data)
-            graphics.DrawText(self.canvas, self.font, 25, 18,
+            graphics.DrawText(self.canvas, self.font, 25, 26,
                               PURPLE_LINE_COLOUR, str(minutes))
 
         # Draw train 2 north ETA
         train_2_north_data = data.get('train_2_north', [])
-        if not self.draw_question_mark_if_unknown(train_2_north_data, 46, 18):
+        if not self.draw_question_mark_if_unknown(train_2_north_data, 46, 19):
             minutes = minutes_until_eta(train_2_north_data)
-            graphics.DrawText(self.canvas, self.font, 46, 18,
+            graphics.DrawText(self.canvas, self.font, 46, 26,
                               PURPLE_LINE_COLOUR, str(minutes))
 
         # Bus Row
         # Draw bus west ETA
         bus_west_data = data.get('bus_1_west', [])
-        if not self.draw_question_mark_if_unknown(bus_west_data, 25, 30):
+        if not self.draw_question_mark_if_unknown(bus_west_data, 25, 31):
             minutes = minutes_until_eta(bus_west_data)
             graphics.DrawText(self.canvas, self.font, 25,
-                              30, BUS_COLOUR, str(minutes))
+                              38, BUS_COLOUR, str(minutes))
 
         # Draw bus east ETA
         bus_east_data = data.get('bus_1_east', [])
-        if not self.draw_question_mark_if_unknown(bus_east_data, 46, 30):
+        if not self.draw_question_mark_if_unknown(bus_east_data, 46, 31):
             minutes = minutes_until_eta(bus_east_data)
             graphics.DrawText(self.canvas, self.font, 46,
-                              30, BUS_COLOUR, str(minutes))
+                              38, BUS_COLOUR, str(minutes))
 
         # Divvy Row
         # Draw Dvvy Station status (regular bikes, ebikes)
         divvy_station_data = data.get('divvy_specific_station', [])
-        if not self.draw_question_mark_if_unknown(divvy_station_data, 23, 41):
+        if not self.draw_question_mark_if_unknown(divvy_station_data, 23, 49):
             # divvy_station_data is [regular_bikes, ebikes]
             regular_bikes = divvy_station_data[0] if len(
                 divvy_station_data) > 0 else 0
             ebikes = divvy_station_data[1] if len(
                 divvy_station_data) > 1 else 0
-            graphics.DrawText(self.canvas, self.font, 23, 41,
+            graphics.DrawText(self.canvas, self.font, 23, 49,
                               TEXT_COLOUR, str(regular_bikes))
             graphics.DrawText(self.canvas, self.font, 41,
-                              41, TEXT_COLOUR, str(ebikes))
+                              49, TEXT_COLOUR, str(ebikes))
 
         # Draw nearby ebikes count
         nearby_ebikes_data = data.get('divvy_nearby_ebikes')
         if nearby_ebikes_data is not None:
-            graphics.DrawText(self.canvas, self.font, 41, 52,
+            graphics.DrawText(self.canvas, self.font, 52, 49,
                               TEXT_COLOUR, str(nearby_ebikes_data))
 
         # Locations Row
         # Draw time to office
         time_to_office = data.get('time_to_office')
         if time_to_office is not None and time_to_office > 0:
-            graphics.DrawText(self.canvas, self.font, 21, 52,
+            graphics.DrawText(self.canvas, self.font, 21, 59,
                               TEXT_COLOUR, str(time_to_office))
         else:
-            self.draw_question_mark_if_unknown([], 21, 52)
+            self.draw_question_mark_if_unknown([], 21, 59)
 
         # Draw time to love location
         time_to_love = data.get('time_to_love')
         if time_to_love is not None and time_to_love > 0:
-            graphics.DrawText(self.canvas, self.font, 48, 52,
+            graphics.DrawText(self.canvas, self.font, 48, 59,
                               TEXT_COLOUR, str(time_to_love))
         else:
-            self.draw_question_mark_if_unknown([], 48, 52)
+            self.draw_question_mark_if_unknown([], 48, 59)
 
     def draw_train_positions(self):
         from cta_stations import stations
@@ -242,43 +242,43 @@ class TransitDisplay:
         trains = {}
         for route in data.get('locations'):
             if route['@name'] == "red":
-                trains['red'] = route.train
+                trains['red'] = route['train']
             elif route['@name'] == "blue":
-                trains['blue'] = route.train
+                trains['blue'] = route['train']
             elif route['@name'] == "g":
-                trains['green'] = route.train
+                trains['green'] = route['train']
             elif route['@name'] == "org":
-                trains['orange'] = route.train
+                trains['orange'] = route['train']
 
-        # Red Line Handling
+        # Train tracker handling
         for train in trains['red']:
             if train['destNm'] == "Howard":
                 self.draw_icon(
-                    'train_up', 2, 2 + (stations[train['nextStaId']]['red_order_north'] / 32 * 57) + 58, TEXT_COLOUR)
+                    'train_up', 1, 60 - (stations[train['nextStaId']]['red_order_north'] / 32 * 58), TEXT_COLOUR)
             else:
                 self.draw_icon(
-                    'train_down', 2, 2 + (stations[train['nextStaId']]['red_order_south'] / 32 * 57), TEXT_COLOUR)
+                    'train_down', 1, 2 + (stations[train['nextStaId']]['red_order_south'] / 32 * 57), TEXT_COLOUR)
         for train in trains['blue']:
             if train['destNm'] == "O'Hare":
                 self.draw_icon(
-                    'train_up', 61, 2 + (stations[train['nextStaId']]['blue_order_north'] / 32 * 57) + 58, TEXT_COLOUR)
+                    'train_up', 60, 60 - (stations[train['nextStaId']]['blue_order_north'] / 32 * 58), TEXT_COLOUR)
             else:
                 self.draw_icon(
-                    'train_down', 61, 2 + (stations[train['nextStaId']]['blue_order_south'] / 32 * 57), TEXT_COLOUR)
+                    'train_down', 60, 2 + (stations[train['nextStaId']]['blue_order_south'] / 32 * 57), TEXT_COLOUR)
         for train in trains['green']:
             if train['destNm'] == "Harlem/Lake":
                 self.draw_icon(
-                    'train_left', 2 + (stations[train['nextStaId']]['green_order_north'] / 26 * 57) + 58, 61, TEXT_COLOUR)
+                    'train_left', 60 - (stations[train['nextStaId']]['green_order_north'] / 26 * 58), 60, TEXT_COLOUR)
             else:
                 self.draw_icon(
-                    'train_right', 2 + (stations[train['nextStaId']]['green_order_south'] / 26 * 57), 61, TEXT_COLOUR)
+                    'train_right', 2 + (stations[train['nextStaId']]['green_order_south'] / 26 * 57), 60, TEXT_COLOUR)
         for train in trains['orange']:
             if train['destNm'] == "Loop":
                 self.draw_icon(
-                    'train_right', 3 + (stations[train['nextStaId']]['orange_order_north'] / 12 * 57), TEXT_COLOUR)
+                    'train_right', 61 - (stations[train['nextStaId']]['orange_order_north'] / 12 * 57), 1, TEXT_COLOUR)
             else:
                 self.draw_icon(
-                    'train_left', 3 + (stations[train['nextStaId']]['orange_order_south'] / 11 * 57) + 58, TEXT_COLOUR)
+                    'train_left', 61 - (stations[train['nextStaId']]['orange_order_south'] / 11 * 57), 1, TEXT_COLOUR)
 
     def update_display(self):
         """Update the display with icons and data"""
@@ -305,14 +305,14 @@ class TransitDisplay:
         self.draw_icon('bolt', 32, 42, DIVVY_COLOUR)
 
         # Locations Row
-        self.draw_icon('office', 10, 52, graphics.color(118, 66, 0))
-        self.draw_icon('heart', 34, 52, graphics.color(255, 0, 0))
+        self.draw_icon('office', 10, 52, graphics.Color(118, 66, 0))
+        self.draw_icon('heart', 34, 52, graphics.Color(255, 0, 0))
         #
         # Draw all the ETA data
         self.draw_transit_etas()
 
         # Draw Train Lines
-        self.draw_line(2, 2, 2, 60, RED_LINE_COLOUR)
+        self.draw_line(2, 2, 2, 61, RED_LINE_COLOUR)
         self.draw_line(2, 60, 61, 61, GREEN_LINE_COLOUR)
         self.draw_line(61, 61, 3, 61, BLUE_LINE_COLOUR)
         self.draw_line(3, 61, 2, 2, ORANGE_LINE_COLOUR)

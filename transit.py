@@ -16,8 +16,8 @@ def get_time_to_loc(dest_lat, dest_long):
     Queries the transit API for the duration between the home location
     and a given location, specified by its coordinates
     """
-    response = requests.get(f"{TRANSIT_PLAN_ENDPOINT}?fromPlace={secrets.get("HOME_LAT")},{secrets.get("HOME_LONG")}&toPlace={dest_lat},{dest_long}&numItineraries=1",
-                            headers={"apiKey": secrets.get("TRANSIT_API_KEY")})
+    response = requests.get(f"{TRANSIT_PLAN_ENDPOINT}?fromPlace={secrets.get('HOME_LAT')},{secrets.get('HOME_LONG')}&toPlace={dest_lat},{dest_long}&numItineraries=1",
+                            headers={"apiKey": secrets.get('TRANSIT_API_KEY')})
     logger.debug(response)
     if response.status_code != 200:
         logger.error(f"Error calling Transit API: Status Code {response.status_code}")
