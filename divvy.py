@@ -95,7 +95,7 @@ def get_nearby_ebikes():
     return int(nearby_count)
 
 
-def get_specific_station_status():
+def get_specific_divvy_station_status():
     """
     Returns an array containing the amount of regular bikes followed by ebikes
     for the given Divvy station ID
