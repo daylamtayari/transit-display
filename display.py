@@ -40,6 +40,11 @@ class TransitDisplay:
         self.font = graphics.Font()
         self.font.LoadFont("fonts/5x8.bdf")
 
+        # Sleep mode
+        self.sleep_mode_enabled = secrets.get("SLEEP_MODE_ENABLED") == "True"
+        self.sleep_mode_start = datetime.strptime(secrets.get("SLEEP_MODE_START"), "%H:%M").time()
+        self.sleep_mode_end = datetime.strptime(secrets.get("SLEEP_MODE_END"), "%H:%M").time()
+
         # Store API data
         self.api_data = {}
         self.api_lock = threading.Lock()
@@ -75,6 +80,20 @@ class TransitDisplay:
             self.draw_icon('question_mark', pos_x, pos_y, TEXT_COLOUR)
             return True
         return False
+
+    def draw_sleep_mode(self):
+        # Draw a single green pixel at 25 brightness in the bottom left corner
+        # Bottom left is (0, 63) since rows are 0-63
+        # A single pixel as a means of a status indicator
+        self.canvas.Clear()
+
+        self.matrix.brightness = 25
+
+        green_color = graphics.Color(0, 25, 0)
+        self.canvas.SetPixel(0, 63, green_color.red, green_color.green, green_color.blue)
+
+        self.canvas = self.matrix.SwapOnVSync(self.canvas)
+        return True
 
     def should_fetch_transit_times(self):
         """
@@ -330,6 +349,12 @@ class TransitDisplay:
         try:
             while True:
                 current_time = time.time()
+                current_rel_time = datetime.now().time()
+                if self.sleep_mode_enabled and (current_rel_time > self.sleep_mode_start or current_rel_time < self.sleep_mode_end):
+                    self.draw_sleep_mode()
+                    # Sleep 60s if sleep mode is active and don't make API calls
+                    time.sleep(60)
+                    continue
 
                 # Fetch API data every 30 seconds
                 if current_time - self.last_api_call >= self.api_interval:
