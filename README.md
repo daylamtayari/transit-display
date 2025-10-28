@@ -6,6 +6,15 @@ By default, it has three rows of ETA data showing ETAs for both directions of tw
 
 Bordering the ETAs are four lines, each representing different train lines, and little arrows representing trains going into a particular direction. Trains are placed on the line proportional to where they are on the path.
 
+## Features
+- Train and bus ETAs
+- Divvy station status
+- Divvy ebikes around a set radius
+- Full ETA to specific locations using the Transit app APIs
+- Live train map on the border
+- Sleep mode to allow for the display to be off between certain hours
+- Configuration fully managed by the `.env` configuration file
+
 ## Build
 - Raspberry Pi
 - 64x64 LED RGB matrix ([I used this one from Amazon](https://www.amazon.com/dp/B0BYJHMFSQ/))
