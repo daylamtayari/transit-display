@@ -7,6 +7,13 @@ from dotenv import dotenv_values
 from icons import icons
 from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 from colours import RED_LINE_COLOUR, PURPLE_LINE_COLOUR, ORANGE_LINE_COLOUR, BLUE_LINE_COLOUR, GREEN_LINE_COLOUR, DIVVY_COLOUR, BUS_COLOUR, TEXT_COLOUR, get_colour
+from cta import (get_train_1_north, get_train_1_south,
+                 get_train_2_north, get_train_2_south,
+                 get_bus_1_west, get_bus_1_east, get_train_lines)
+from cta_stations import stations
+from divvy import get_specific_divvy_station_status, get_nearby_ebikes
+from transit import get_time_to_office, get_time_to_love
+from utils import minutes_until_eta
 
 secrets = dotenv_values(".env")
 logger = logging.getLogger(__name__)
@@ -109,12 +116,6 @@ class TransitDisplay:
 
     def fetch_api_data(self):
         """Fetch all API data in parallel using ThreadPoolExecutor"""
-        from cta import (get_train_1_north, get_train_1_south,
-                         get_train_2_north, get_train_2_south,
-                         get_bus_1_west, get_bus_1_east, get_train_routes)
-        from divvy import get_specific_divvy_station_status, get_nearby_ebikes
-        from transit import get_time_to_office, get_time_to_love
-        from utils import minutes_until_eta
 
         current_time = time.time()
 
@@ -127,7 +128,7 @@ class TransitDisplay:
             'bus_1_east': get_bus_1_east,
             'divvy_specific_station': get_specific_divvy_station_status,
             'divvy_nearby_ebikes': get_nearby_ebikes,
-            'locations': get_train_routes
+            'locations': get_train_lines
         }
 
         # Check if we should fetch transit times
@@ -170,7 +171,6 @@ class TransitDisplay:
 
     def draw_transit_etas(self):
         """Update the display with current data - draws ETA times for all transit options"""
-        from utils import minutes_until_eta
 
         # Access shared data with lock
         with self.api_lock:
@@ -259,7 +259,6 @@ class TransitDisplay:
             self.draw_question_mark_if_unknown([], 48, 59)
 
     def draw_train_positions(self):
-        from cta_stations import stations
         # Access shared data with lock
         with self.api_lock:
             data = self.api_data.copy()

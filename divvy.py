@@ -86,12 +86,10 @@ def get_nearby_ebikes():
         return 0
 
     # Calculate distances to all ebikes
-    distances = calculate_distances_to_point(ebikes, float(
-        secrets.get("HOME_LAT")), float(secrets.get("HOME_LONG")))
+    distances = calculate_distances_to_point(ebikes, float(secrets.get("HOME_LAT")), float(secrets.get("HOME_LONG")))
 
     # Count ebikes within radius
-    nearby_count = np.sum(distances <= secrets.get(
-        "NEARBY_BIKE_RADIUS_METERS"))
+    nearby_count = np.sum(distances <= secrets.get("NEARBY_BIKE_RADIUS_METERS"))
     return int(nearby_count)
 
 
