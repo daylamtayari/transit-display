@@ -230,7 +230,7 @@ class TransitDisplay:
                 divvy_station_data) > 0 else 0
             ebikes = divvy_station_data[1] if len(
                 divvy_station_data) > 1 else 0
-            graphics.DrawText(self.canvas, self.font, 23, 49,
+            graphics.DrawText(self.canvas, self.font, 22, 49,
                               TEXT_COLOUR, str(regular_bikes))
             graphics.DrawText(self.canvas, self.font, 41,
                               49, TEXT_COLOUR, str(ebikes))
