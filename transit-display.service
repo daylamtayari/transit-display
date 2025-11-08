@@ -5,8 +5,10 @@ After=network.target
 [Service]
 Type=simple
 ExecStart=python3 main.py
+StandardOutput=append:/var/log/transitdisplay.log
+StandardError=append:/var/log/transitdisplay.log
 Restart=always
-RestartSec=2
+RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target
