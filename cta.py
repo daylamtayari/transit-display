@@ -26,7 +26,7 @@ def create_eta_arr(train, eta_json):
     return eta_arr
 
 
-def get_train_arrivals(stpid):
+def get_train_arrivals(stpid, alt_stpid=None):
     """
     Calls the CTA train API to get the arrivals for a given stop
     and returns an array of the all of the arrivals ETAs in order
@@ -35,11 +35,14 @@ def get_train_arrivals(stpid):
     response = requests.get(url)
     ctatt = response.json()['ctatt']
     if 'eta' not in ctatt:
-        return []
+        if alt_stpid is not None:
+            return get_train_arrivals(alt_stpid)
+        else:
+            return []
     return create_eta_arr(True, ctatt['eta'])
 
 
-def get_bus_arrivals(stpid):
+def get_bus_arrivals(stpid, alt_stpid=None):
     """
     Calls the CTA bus API to get the arrivals for a given stop
     and returns an array of the all of the arrivals ETAs in order
@@ -48,7 +51,10 @@ def get_bus_arrivals(stpid):
     response = requests.get(url)
     eta = response.json()['bustime-response']['prd']
     if len(eta) == 0:
-        return []
+        if alt_stpid is not None:
+            return get_bus_arrivals(alt_stpid)
+        else:
+            return []
     return create_eta_arr(False, eta)
 
 
@@ -63,24 +69,24 @@ def get_train_lines():
 
 
 def get_train_1_north():
-    return get_train_arrivals(secrets.get("TRAIN_1_NORTH_STPID"))
+    return get_train_arrivals(secrets.get("TRAIN_1_NORTH_STPID"), secrets.get("TRAIN_1_NORTH_ALT_STPID"))
 
 
 def get_train_1_south():
-    return get_train_arrivals(secrets.get("TRAIN_1_SOUTH_STPID"))
+    return get_train_arrivals(secrets.get("TRAIN_1_SOUTH_STPID"), secrets.get("TRAIN_1_SOUTH_ALT_STPID"))
 
 
 def get_train_2_north():
-    return get_train_arrivals(secrets.get("TRAIN_2_NORTH_STPID"))
+    return get_train_arrivals(secrets.get("TRAIN_2_NORTH_STPID"), secrets.get("TRAIN_2_NORTH_ALT_STPID"))
 
 
 def get_train_2_south():
-    return get_train_arrivals(secrets.get("TRAIN_2_SOUTH_STPID"))
+    return get_train_arrivals(secrets.get("TRAIN_2_SOUTH_STPID"), secrets.get("TRAIN_2_SOUTH_ALT_STPID"))
 
 
 def get_bus_1_west():
-    return get_bus_arrivals(secrets.get("BUS_1_WEST_STPID"))
+    return get_bus_arrivals(secrets.get("BUS_1_WEST_STPID"), secrets.get("BUS_1_WEST_ALT_STPID"))
 
 
 def get_bus_1_east():
-    return get_bus_arrivals(secrets.get("BUS_1_EAST_STPID"))
+    return get_bus_arrivals(secrets.get("BUS_1_EAST_STPID"), secrets.get("BUS_1_EAST_ALT_STPID"))
