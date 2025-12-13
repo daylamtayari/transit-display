@@ -56,6 +56,14 @@ class TransitDisplay:
         self.api_data = {}
         self.api_lock = threading.Lock()
 
+        # Alt Info
+        self.train_1_north_alt = False
+        self.train_1_south_alt = False
+        self.train_2_north_alt = False
+        self.train_2_south_alt = False
+        self.bus_1_east_alt = False
+        self.bus_1_west_alt = False
+
         # Get configurable train colours from .env
         self.train_1_colour = get_colour(secrets.get("TRAIN_1_COLOUR"))
         self.train_2_colour = get_colour(secrets.get("TRAIN_2_COLOUR"))
@@ -183,38 +191,38 @@ class TransitDisplay:
         # Draw train 1 south ETA
         train_1_south_data = data.get('train_1_south', {"etas": [], "is_alternate": False})
         train_1_south_etas = train_1_south_data.get("etas", [])
-        train_1_south_is_alt = train_1_south_data.get("is_alternate", False)
+        self.train_1_south_alt = train_1_south_data.get("is_alternate", False)
         if not self.draw_question_mark_if_unknown(train_1_south_etas, 25, 8):
             minutes = minutes_until_eta(train_1_south_etas)
-            colour = self.train_1_alt_colour if train_1_south_is_alt else self.train_1_colour
+            colour = self.train_1_alt_colour if self.train_1_south_alt else self.train_1_colour
             graphics.DrawText(self.canvas, self.font, 25, 15, colour, str(minutes))
 
         # Draw train 1 north ETA
         train_1_north_data = data.get('train_1_north', {"etas": [], "is_alternate": False})
         train_1_north_etas = train_1_north_data.get("etas", [])
-        train_1_north_is_alt = train_1_north_data.get("is_alternate", False)
+        self.train_1_north_alt = train_1_north_data.get("is_alternate", False)
         if not self.draw_question_mark_if_unknown(train_1_north_etas, 46, 8):
             minutes = minutes_until_eta(train_1_north_etas)
-            colour = self.train_1_alt_colour if train_1_north_is_alt else self.train_1_colour
+            colour = self.train_1_alt_colour if self.train_1_north_alt else self.train_1_colour
             graphics.DrawText(self.canvas, self.font, 46, 15, colour, str(minutes))
 
         # Train 2 Row
         # Draw train 2 south ETA
         train_2_south_data = data.get('train_2_south', {"etas": [], "is_alternate": False})
         train_2_south_etas = train_2_south_data.get("etas", [])
-        train_2_south_is_alt = train_2_south_data.get("is_alternate", False)
+        self.train_2_south_alt = train_2_south_data.get("is_alternate", False)
         if not self.draw_question_mark_if_unknown(train_2_south_etas, 25, 19):
             minutes = minutes_until_eta(train_2_south_etas)
-            colour = self.train_2_alt_colour if train_2_south_is_alt else self.train_2_colour
+            colour = self.train_2_alt_colour if self.train_2_south_alt else self.train_2_colour
             graphics.DrawText(self.canvas, self.font, 25, 26, colour, str(minutes))
 
         # Draw train 2 north ETA
         train_2_north_data = data.get('train_2_north', {"etas": [], "is_alternate": False})
         train_2_north_etas = train_2_north_data.get("etas", [])
-        train_2_north_is_alt = train_2_north_data.get("is_alternate", False)
+        self.train_2_north_alt = train_2_north_data.get("is_alternate", False)
         if not self.draw_question_mark_if_unknown(train_2_north_etas, 46, 19):
             minutes = minutes_until_eta(train_2_north_etas)
-            colour = self.train_2_alt_colour if train_2_north_is_alt else self.train_2_colour
+            colour = self.train_2_alt_colour if self.train_2_north_alt else self.train_2_colour
             graphics.DrawText(self.canvas, self.font, 46, 26, colour, str(minutes))
 
         # Bus Row
