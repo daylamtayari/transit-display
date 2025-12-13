@@ -1,8 +1,10 @@
 import logging
 from datetime import datetime
 from math import floor
+from dotenv import dotenv_values
 
 logger = logging.getLogger(__name__)
+secrets = dotenv_values(".env")
 
 
 def train_timestamp_to_date(timestamp):
@@ -30,12 +32,13 @@ def minutes_until_date(date_timestamp):
 def minutes_until_eta(eta):
     """
     Returns the amount of minutes until an arrival, using the following
-    arrival if the time until the arrival is under 2 minutes,
+    arrival if the time until the arrival is under the configured cutoff,
     unless there is no additional arrival
     """
+    cutoff = int(secrets.get("MINUTES_UNTIL_ETA_CUTOFF", 5))
     minutes = minutes_until_date(eta[0])
     logger.debug(f"Minutes until ETA: {minutes}")
-    # If time is under 2 minutes and there's another arrival, show time until next arrival instead
-    if minutes < 2 and len(eta) > 1:
+    # If time is under cutoff and there's another arrival, show time until next arrival instead
+    if minutes < cutoff and len(eta) > 1:
         return minutes_until_date(eta[1])
     return minutes
