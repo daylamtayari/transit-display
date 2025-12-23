@@ -345,13 +345,13 @@ class TransitDisplay:
         # Train 2 Row
         if self.train_2_south_alt == self.train_2_north_alt:
             colour = self.train_2_alt_colour if self.train_2_south_alt else self.train_2_colour
-            self.draw_icon('train', 7, 7, colour)
+            self.draw_icon('train', 7, 18, colour)
         # Otherwise, draw split icon with different colors
         else:
             north_colour = self.train_2_alt_colour if self.train_2_north_alt else self.train_2_colour
             south_colour = self.train_2_alt_colour if self.train_2_south_alt else self.train_2_colour
-            self.draw_icon('top_train', 7, 7, north_colour)
-            self.draw_icon('bottom_train', 7, 11, south_colour)
+            self.draw_icon('top_train', 7, 11, north_colour)
+            self.draw_icon('bottom_train', 7, 18, south_colour)
         self.draw_icon('down_arrow', 18, 20, self.train_2_colour)
         self.draw_icon('up_arrow', 39, 20, self.train_2_colour)
 
