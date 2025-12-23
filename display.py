@@ -169,10 +169,11 @@ class TransitDisplay:
         # Set default values for transit times if not fetched
         if not should_fetch_transit or results['time_to_love'] != 0 or results['time_to_office'] != 0:
             train_1_south_etas = results['train_1_south'].get('etas', [])
-            results['time_to_love'] = 4 + \
-                minutes_until_eta(train_1_south_etas) + 17 + 3
-            results['time_to_office'] = 4 + \
-                minutes_until_eta(train_1_south_etas) + 23 + 6
+            # Update this with appropriate placeholders
+            results['time_to_love'] = 5 + \
+                minutes_until_eta(train_1_south_etas) + 10 + 3
+            results['time_to_office'] = 5 + \
+                minutes_until_eta(train_1_south_etas) + 18 + 2
 
         # Update shared data with lock
         with self.api_lock:
