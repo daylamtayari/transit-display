@@ -143,8 +143,7 @@ class TransitDisplay:
 
         # Check if we should fetch transit times
         should_fetch_transit = (
-            self.should_fetch_transit_times() and
-            current_time - self.last_transit_call >= self.transit_interval
+            self.should_fetch_transit_times() and current_time - self.last_transit_call >= self.transit_interval
         )
 
         if should_fetch_transit:
