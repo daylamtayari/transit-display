@@ -31,7 +31,7 @@ def get_train_arrivals(stpid, alt_stpid=None):
     Calls the CTA train API to get the arrivals for a given stop
     and returns a dict with etas array and is_alternate flag
     """
-    url = f"{TRAIN_ARRIVALS_ENDPOINT}?stpid={stpid}&max=3&key={secrets.get('TRAIN_API_KEY')}&outputType=JSON"
+    url = f"{TRAIN_ARRIVALS_ENDPOINT}?stpid={stpid}&max=5&key={secrets.get('TRAIN_API_KEY')}&outputType=JSON"
     response = requests.get(url)
     ctatt = response.json()['ctatt']
     if 'eta' not in ctatt:
