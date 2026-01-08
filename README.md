@@ -6,6 +6,8 @@ By default, it has three rows of ETA data showing ETAs for both directions of tw
 
 Bordering the ETAs are four lines, each representing different train lines, and little arrows representing trains going into a particular direction. Trains are placed on the line proportional to where they are on the path.
 
+![Display](./transit-display.jpg)
+
 ## Features
 - Train and bus ETAs
 - Divvy station status
